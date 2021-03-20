@@ -1,66 +1,91 @@
-import {MutableRefObject, useRef, Children} from 'react'
+import { MutableRefObject, useRef, Children} from 'react'
+import * as React from 'react'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
+import defaultVerticalProps from './presets/useDefaultVertical'
 
+//Unexported types from '@n8tb1t/use-scroll-position'
+export type ElementRef = MutableRefObject<HTMLElement | undefined>;
+export type IPosition = {x: number, y: number};
+
+//Special types for configuration
+export type SectionCallback = (index: number) => void;
+
+export interface TriggerParameters {
+    sectionRef: ElementRef,
+    boundingRef: ElementRef,
+    index: number,
+    prevPos: IPosition,
+    currPos: IPosition,
+    callback: SectionCallback
+}
+
+type hookProps = {
+    sectionRef: ElementRef
+    boundingRef: ElementRef
+    index: number
+    callback: SectionCallback
+    options: OptionalProps
+}
+
+export type OptionalProps = {
+    triggerCallback: (arg0: TriggerParameters) => void
+}
+
+//Main Components
 function sectionPositionHook({
-    boundingRef,
     sectionRef,
-    sectionIndex,
-    setSection
-}: {
-    boundingRef: MutableRefObject<HTMLElement>
-    sectionRef: MutableRefObject<HTMLElement>
-    sectionIndex: number
-    setSection: (arg0: number) => void;
-}){
+    boundingRef,
+    index,
+    callback,
+    options,
+}: hookProps){
     useScrollPosition(
-        ({prevPos, currPos }) => {
-            let triggerHeight = -(boundingRef?.current.clientHeight/2)
-
-            let isTriggeredGoingDown = (prevPos.y < triggerHeight) &&  (triggerHeight < currPos.y)
-            let isTriggeredGoingUp = (currPos.y < triggerHeight) &&  (triggerHeight < prevPos.y)
-            if(isTriggeredGoingDown){
-                setSection(sectionIndex);
-            } else if(isTriggeredGoingUp){
-                setSection(sectionIndex - 1);
-            }
-        },
+        ({prevPos, currPos}) => {options.triggerCallback({
+            sectionRef,
+            boundingRef,
+            index,
+            prevPos,
+            currPos,
+            callback})},
         [],
         sectionRef,
         false,
-        150,
+        100,
         boundingRef
     );
 };
 
-export default function Scroller({
+export function sectionScrollTracker({
     children,
-    setSection
+    callback,
+    options,
 }: {
-    children,
-    setSection: (section: number) => void;
+    children: any
+    callback: SectionCallback
+    options?: OptionalProps
 }){
-    const scrollerEle = useRef(null);
+    const scrollerEle = useRef(undefined);
+    options = options == undefined ? defaultVerticalProps : undefined
 
     function renderChildren(){
-        let sectionIndex = 0;
-        return Children.map(children, child, => {
-            const sectionRef = useRef();
-
-            let args = {
+        return Children.map(children, (child, index) => {
+            const sectionRef = useRef(undefined);
+            const sectionProps = {
                 boundingRef: scrollerEle,
                 sectionRef: sectionRef,
-                sectionIndex: sectionIndex,
-                setSection: setSection
+                index: index,
+                callback: callback,
+                options: options
             };
-            sectionPositionHook(args);
 
-            sectionIndex += 1;
-                <div ref={sectionRef} key={sectionIndex - 1}>
-                    {child}
-                </div>
-            );
+            sectionPositionHook(sectionProps);
+
+            <div ref={sectionRef} key={index}>
+                {child}
+            </div>
         });
     }
+
     return(
         <div ref={scrollerEle}>
             {renderChildren()}
