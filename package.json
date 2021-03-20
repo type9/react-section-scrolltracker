@@ -1,10 +1,10 @@
 {
-  "name": "npm-react-typescript-template",
+  "name": "react-section-scrolltracking",
   "version": "1.0.0",
-  "description": "A template for publishing a React + TypeScript package to npm",
-  "author": "ovieokeh",
+  "description": "A React component for tracking which section is currently being scrolled through",
+  "author": "type9",
   "license": "Apache-2.0",
-  "repository": "ovieokeh/npm-react-typescript-template",
+  "repository": "type9/react-section-scrolltracking",
   "main": "dist/index.js",
   "engines": {
     "node": ">=8",
@@ -14,7 +14,6 @@
     "build": "rollup -c",
     "start": "rollup -c -w"
   },
-  "dependencies": {},
   "peerDependencies": {
     "react": ">= 16.8.0 < 2",
     "react-dom": ">= 16.8.0 < 2"
@@ -38,5 +37,8 @@
     "react",
     "typescript",
     "npm"
-  ]
+  ],
+  "dependencies": {
+    "@n8tb1t/use-scroll-position": "^2.0.3"
+  }
 }
