@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "outDir": "dist",
     "module": "esnext",
     "target": "es5",

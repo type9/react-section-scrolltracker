@@ -1,7 +1,8 @@
 import {TriggerParameters} from "../sectionScrollTracker";
+// import defaultStyles from "./vertical.module.css";
 
 function triggerHalfway({sectionRef, boundingRef, index, prevPos, currPos, callback}: TriggerParameters){
-    const elementsNotLoaded = !boundingRef && !sectionRef;
+    const elementsNotLoaded = !boundingRef.current && !sectionRef.current;
     if(elementsNotLoaded) return; //catches undefined refs which can happen on the intial render
 
     let triggerHeight = 0;
@@ -20,5 +21,6 @@ function triggerHalfway({sectionRef, boundingRef, index, prevPos, currPos, callb
 }
 
 export default {
-    triggerCallback: triggerHalfway
+    triggerCallback: triggerHalfway,
+    styles: null
 }

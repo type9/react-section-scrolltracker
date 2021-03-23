@@ -32,12 +32,14 @@ type hookProps = {
 
 export interface OptionalSectionProps {
     triggerCallback: (arg0: TriggerParameters) => void
+    styles: any
 }
 
 function convRefTypes(ref: DivElementRef): ElementRef{
     // @n8tb1t uses a ref type that can be undefined, whereas proper typescript is possibly null
     let newRef = useRef(undefined);
     if(ref.current !== null){newRef.current == ref.current}
+    console.log(newRef)
     return newRef;
 }
 
@@ -74,7 +76,7 @@ export function sectionScrollTracker({
     children: any
     callback: SectionCallback
     options?: OptionalSectionProps
-}){
+}) {
     const scrollerEle = useRef<HTMLDivElement>(null);
     options = options == undefined ? defaultProps : options
 
@@ -91,14 +93,16 @@ export function sectionScrollTracker({
 
             sectionPositionHook(sectionProps);
 
-            <div ref={sectionRef} key={index}>
-                {child}
-            </div>
+            return(
+                <div ref={sectionRef} key={index}>
+                    {child}
+                </div>
+            );
         });
     }
 
     return(
-        <div ref={scrollerEle}>
+        <div style={{overflow: 'scroll', height:'inherit'}} ref={scrollerEle}>
             {renderChildren()}
         </div>
     );
