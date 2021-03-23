@@ -1,3 +1,1 @@
-import { sectionScrollTracker } from './sectionScrollTracker'
-
-export sectionScrollTracker
+export { sectionScrollTracker } from './sectionScrollTracker'

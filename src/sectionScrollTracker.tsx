@@ -4,7 +4,7 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import defaultProps from './presets/useVertical'
 
 //Unexported types from '@n8tb1t/use-scroll-position'
-export type ElementRef = MutableRefObject<HTMLElement | undefined>
+type ElementRef = MutableRefObject<HTMLElement | undefined>
 type IPosition = {x: number, y: number};
 
 //the type this hook will use
@@ -27,10 +27,10 @@ type hookProps = {
     boundingRef: DivElementRef
     index: number
     callback: SectionCallback
-    options?: OptionalProps
+    options?: OptionalSectionProps
 }
 
-export type OptionalProps = {
+export interface OptionalSectionProps {
     triggerCallback: (arg0: TriggerParameters) => void
 }
 
@@ -73,7 +73,7 @@ export function sectionScrollTracker({
 }: {
     children: any
     callback: SectionCallback
-    options?: OptionalProps
+    options?: OptionalSectionProps
 }){
     const scrollerEle = useRef<HTMLDivElement>(null);
     options = options == undefined ? defaultProps : options
